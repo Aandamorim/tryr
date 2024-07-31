@@ -3,7 +3,6 @@
 
 # carregando libs ---------------------------------------------------------
 
-
 library(dplyr)
 library(ggplot2)
 
@@ -59,6 +58,8 @@ x3 <- c(0, 1, 1, 2, 2, 2, 3, 3, 4)
 ggplot()+
   geom_histogram(mapping = aes(x = x3), binwidth = 1)
 
+ggplot() +
+  geom_histogram(mapping = aes(replicate(1000000, rolagem2(1:20))), binwidth = 01)
 rolagens <- replicate(10000, rolagem2())
 
 
@@ -68,7 +69,7 @@ rolagens <- replicate(10000, rolagem2())
 ggplot()+
   geom_histogram(mapping = aes(rolagens), binwidth = 1)
 
-sample()
+?sample()
 
 
 rolagem_viciada <- function() {
@@ -76,28 +77,53 @@ rolagem_viciada <- function() {
   dados <- sample(dado, 2, replace = T, prob = c(1/8, 1/8, 1/8, 1/8, 1/8, 3/8))
   sum(dados)
 }
-
+rolagem_viciada()
 
 ggplot()+
-  geom_histogram(mapping = aes(
-    replicate(
-      10000, rolagens_viciadas
-      )
-    ), binwidth = 1)
-
+  geom_histogram(mapping = aes(replicate(10000, rolagem_viciada())), binwidth = 1)
 
 # Playing Cards
 
 hand <- c('ace', 'king', 'queen', 'jack', 'ten')
-
+dado
 dim(dado)
-
+length(dado)
 naipe <-  rep('spades',5)
 naipe
 m <- matrix(c(hand, naipe), ncol = 2, nrow = 5)
 class(m)
 attributes(m)
 
-deck <- read.csv("C:/Users/aanda/OneDrive/Documentos/hands_on_r/hands_on_r/deck.csv")
+deck <- read.csv("~/github/tryr/deck.csv")
+deck
 
-write.csv(deck, file = "cards.csv", row.names = FALSE)
+# escolhendo uma carta -------------------------------------------------
+
+deal <- function(cards) {
+  cards[1,]
+}
+
+deal(deck)
+
+# sempre retona a primeira carta do deck
+
+
+# criando um ramdomização com as 52 cartas --------------------------------
+
+aleatorio52 <- sample(1:52, size = 52)
+aleatorio52
+
+deck[aleatorio52,]
+
+embaralhar <- function(cards) {
+  aleatorio52 <- sample(1:52, size =52)
+  cards[aleatorio52, ]
+}
+
+deal(deck)
+
+deck_embaralhado <- embaralhar(deck)
+
+deal(deck_embaralhado)
+
+mean(deck$value)
