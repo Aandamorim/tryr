@@ -96,7 +96,6 @@ attributes(m)
 
 deck <- read.csv("~/github/tryr/deck.csv")
 deck
-
 # escolhendo uma carta -------------------------------------------------
 
 deal <- function(cards) {
@@ -108,12 +107,12 @@ deal(deck)
 # sempre retona a primeira carta do deck
 
 
-# criando um ramdomização com as 52 cartas --------------------------------
+# criando uma randomização com as 52 cartas --------------------------------
 
 aleatorio52 <- sample(1:52, size = 52)
 aleatorio52
 
-deck[aleatorio52,]
+deal(deck[aleatorio52,])
 
 embaralhar <- function(cards) {
   aleatorio52 <- sample(1:52, size =52)
@@ -127,3 +126,76 @@ deck_embaralhado <- embaralhar(deck)
 deal(deck_embaralhado)
 
 mean(deck$value)
+
+
+# mudando valores in loco -------------------------------------------------
+
+
+deck2 <- deck
+
+deck2[c(13, 26, 39, 52),]
+
+deck2$value[c(13, 26, 39, 52)] <- 14
+
+head(deck2, 13)
+
+deck3 <- embaralhar(deck)
+
+deck3
+
+
+# encontrando os aces pra mudar seu valor ---------------------------------
+
+deck3$value[deck3$face == "ace"] <-  14
+
+count(deck3[deck3$face == 'ace', ])
+
+sum(deck3$face == 'ace')
+
+deck4 <- deck
+
+deck4$value <- 0
+
+# encontrando onde é True
+
+deck4$suit == 'hearts'
+
+# especificando 
+
+deck4$value[deck4$suit== "hearts"]
+
+# mudando o valor
+
+deck4$value[deck$suit == 'hearts'] <-  1
+
+# queen de spade vale 13, porém é difícil encontrá-la apenas com uma condição
+
+deck4[deck4$face == 'queen', ]
+
+deck4[deck4$suit == 'spades', ]
+
+# combinando com boolean
+
+deck4[deck4$suit == 'spades' & deck4$face == "queen", 'value'] <- 13
+
+deck4
+
+w <- c(-1, 0, 1)
+x <- c(5, 15)
+y <- 'February'
+z <- c('monday', 'tuesday', 'friday')
+ # is w possitive?
+
+w > 0
+
+# is x greater tahn 10 and less than 20?
+
+x > 10 & x< 20
+
+# is object y the word February?
+
+y == 'February'
+
+# is every value in z day of the week?
+
+all(z %in% c('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))
