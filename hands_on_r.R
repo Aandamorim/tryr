@@ -218,3 +218,92 @@ get_symbols <- function() {
 }
 
 get_symbols()
+
+num <- 15
+if (num < 0) {
+  print("num is negative")
+  print(num)
+  print("don't worry, i'll fix it")
+  num <- num * -1
+  print('now num is positive')
+  print(num)
+} else {
+  print("num is already positive")
+  print(num)
+} 
+
+
+# testando casos
+
+if ("caso: todos iguais"){
+  premio <- #busque o premio na lista
+} else if ("caso: todas barras"){
+  premio <- # assign 5
+} else {
+  ## count cherries
+  premio <- #calcula o premio
+}
+
+ ## conta diamantes
+ ## duplica se necessário
+
+
+ ## contagem
+
+contagem <- function(symbols) {
+  
+ ## calcula premio
+  
+  premio
+}
+
+# caso iguais
+
+igual <- simbolos[1] == simbolos[2] && simbolos[2] == simbolos[3]
+
+# barras
+
+barras <- simbolos %in% c("B", "BB", "BBB")
+
+# definindo a contagem do premio
+# um código que olha pra subsets e onde as relações são conhecidas pode ser
+# resumido em um "tabela" (lookup table)
+
+payouts <- c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, "B" = 10, "C" = 10, "0"= 0)
+
+payouts["BB"]
+
+# unname deixa o nome de fora do resultado
+
+unname(payouts["BB"])
+
+## montando
+
+
+# contando a quantidade de Cs e Ds
+
+cherries <- sum(simbolos == "C")
+diamonds <- sum(simbolos == "D")
+
+# usando o vetor de sum de cherries pra indexar o valor do premio
+
+premio <- c(0, 2, 5)[cherries +1]
+
+if (igual){
+  payouts <- 
+    c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, "B" = 10, "C" = 10, "0"= 0)
+  premio <- unname(payouts[simbolos[1]])
+  
+} else if (all(barras)){
+  premio <- 5
+    
+} else {
+  cherries <- sum(simbolos == "C")
+  premio <- premio <- c(0, 2, 5)[cherries +1]
+}
+
+diamonds <- sum(simbolos == "D")
+## duplica se necessário
+
+
+## contagem
