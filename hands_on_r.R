@@ -199,3 +199,22 @@ y == 'February'
 # is every value in z day of the week?
 
 all(z %in% c('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))
+
+deck5 <- deck
+
+# blackjack facecard 10 e ace 11 ou 1
+
+deck5[deck5$face %in% c('queen', 'jack', 'king'), 'value'] <- 10
+
+deck5[deck$face == 'ace', 'value'] <- NA
+
+
+# slot machine
+
+get_symbols <- function() {
+  wheel <- c('DD', '7', "BBB", "BB", "B", 'C', '0')
+  sample(wheel, size = 3, replace = T,
+         prob = c(0.03, 0.03, 0.06, 0.1, 0.25, 0.01, 0.52))
+}
+
+get_symbols()
