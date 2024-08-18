@@ -214,10 +214,11 @@ deck5[deck$face == 'ace', 'value'] <- NA
 get_symbols <- function() {
   wheel <- c('DD', '7', "BBB", "BB", "B", 'C', '0')
   sample(wheel, size = 3, replace = T,
-         prob = c(0.03, 0.03, 0.06, 0.1, 0.25, 0.01, 0.52))
+         prob = c(0.03 0.03, 0.06, 0.1, 0.25, 0.01, 0.52))
 }
 
 get_symbols()
+
 
 num <- 15
 if (num < 0) {
@@ -251,8 +252,9 @@ if ("caso: todos iguais"){
  ## contagem
 
 contagem <- function(symbols) {
+
   
- ## calcula premio
+## calcula premio
   
   premio
 }
@@ -303,7 +305,87 @@ if (igual){
 }
 
 diamonds <- sum(simbolos == "D")
-## duplica se necessário
-
-
+premio * 2 ^ diamonds
 ## contagem
+
+
+
+## full
+
+premiacao <- function(simbolos) {
+  # identifica caso
+  igual <- simbolos[1] == simbolos[2] && simbolos[2] == simbolos[3]
+  barras <- simbolos %in% c("B", "BB", "BBB")
+  
+  # define premio
+  if (igual){
+    payouts <- 
+      c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, "B" = 10, "C" = 10, "0"= 0)
+    premio <- unname(payouts[simbolos[1]])
+    
+  } else if (all(barras)){
+    premio <- 5
+    
+  } else {
+    cherries <- sum(simbolos == "C")
+    premio <- premio <- c(0, 2, 5)[cherries +1]
+  }
+  
+  #ajusta para quant diamantes
+  diamonds <- sum(simbolos == "D")
+  premio * 2 ^ diamonds
+}
+
+jogar <- function() {
+  simbolos <- get_symbols()
+  print(simbolos)
+  premiacao(simbolos)
+}
+
+dado <- 1:6
+
+dado
+
+rolls <- expand.grid(dado, dado)
+rolls
+
+#append
+
+rolls$value <- rolls$Var1 + rolls$Var2
+
+rename(rolls, sum = value)
+
+proba <- c("1" = 1/6,"2" = 1/6, "3" = 1/6, "4" = 1/6, "5" = 1/6, "6" = 1/6)
+proba2 <- c(1/6, 1/6, 1/6, 1/6, 1/6, 1/6)
+
+rolls$Var1
+
+proba[rolls$Var1]
+
+# atribuir probabilidade aos resultados possíveis
+rolls$prob1 <- proba[rolls$Var1]
+rolls$prob2 <- proba[rolls$Var2]
+
+#prob 2 eventos independentes = prob1 * prob2
+rolls$prob <- rolls$prob1 * rolls$prob2
+
+sum(rolls$value * rolls$prob)
+
+proba[dados]
+
+dados$prob <- proba2[dados]
+
+
+dado <- c(1, 2, 3, 4, 5, 6)
+prob <- c(1/6, 1/6, 1/6, 1/6, 1/6, 1/6)
+
+dado <- data.frame(
+  valores = dado,
+  prob = prob
+)
+dado
+dado$vxp <- dado$valores * dado$prob
+
+sum(dado$vxp)
+
+# esperança da slot machine
