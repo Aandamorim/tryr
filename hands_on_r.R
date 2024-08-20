@@ -214,7 +214,7 @@ deck5[deck$face == 'ace', 'value'] <- NA
 get_symbols <- function() {
   wheel <- c('DD', '7', "BBB", "BB", "B", 'C', '0')
   sample(wheel, size = 3, replace = T,
-         prob = c(0.03 0.03, 0.06, 0.1, 0.25, 0.01, 0.52))
+         prob = c(0.03, 0.03, 0.06, 0.1, 0.25, 0.01, 0.52))
 }
 
 get_symbols()
@@ -341,7 +341,7 @@ jogar <- function() {
   print(simbolos)
   premiacao(simbolos)
 }
-
+jogar()
 dado <- 1:6
 
 dado
@@ -389,3 +389,24 @@ dado$vxp <- dado$valores * dado$prob
 sum(dado$vxp)
 
 # esperança da slot machine
+
+wheel <- c("DD", "7", "BBB", "BB", "B", "C", "0")
+
+combinacoes <- expand.grid(wheel, wheel, wheel, stringsAsFactors = F)
+
+combinacoes
+
+probab <- c("DD" = 0.03, "7" = 0.03, "BBB" = 0.06, "BB" = 0.1, "B" = 0.25, "C" = 0.01, "0" = 0.52)
+
+
+combinacoes$prob1 <- probab[combinacoes$Var1]
+combinacoes$prob2 <- probab[combinacoes$Var2]
+combinacoes$prob3 <- probab[combinacoes$Var3]
+
+combinacoes$probtotal <- combinacoes$prob1 * combinacoes$prob2 * combinacoes$prob3
+
+head(combinacoes, 3)
+
+sum(combinacoes$probtotal)
+
+
