@@ -332,7 +332,7 @@ premiacao <- function(simbolos) {
   }
   
   #ajusta para quant diamantes
-  diamonds <- sum(simbolos == "D")
+  diamonds <- sum(simbolos == "DD")
   premio * 2 ^ diamonds
 }
 
@@ -409,4 +409,17 @@ head(combinacoes, 3)
 
 sum(combinacoes$probtotal)
 
+combinacoes$premio <- NA
+head(combinacoes)
+
+for (i in 1:nrow(combinacoes)) {
+  simbolos <- c(combinacoes[i, 1], combinacoes[i, 2], combinacoes[i, 3])
+  combinacoes$premio[i] <- premiacao(simbolos)
+}
+
+head(combinacoes, 5)
+
+View(combinacoes)
+
+sum(combinacoes$premio * combinacoes$probtotal)
 
