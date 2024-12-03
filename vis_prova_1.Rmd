@@ -1,0 +1,83 @@
+---
+title: "Prova 1"
+author: "Anderson Amorim"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r movies, echo=FALSE, warning=FALSE, message=FALSE}
+filmes <- read.csv2("data.csv", header = TRUE, sep = ",")
+
+#head(filmes[2:5])
+
+# pacotes
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(tidyr)
+
+# criando gráficos
+
+a <- ggplot(filmes, aes(x = averageRating)) +
+  geom_density(fill = "lightblue", alpha = 0.5) +
+  labs(title = "Distribuição das Avaliações Médias", x = "Avaliação Média", y = "Densidade") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+# Filtrando os dados para evitar valores extremos
+filtered_filmes <- filmes %>%
+  filter(!is.na(averageRating) & !is.na(numVotes)) %>%
+  filter(numVotes < 3000000) # Ajuste conforme necessário
+
+# Criando o gráfico
+b <- ggplot(filtered_filmes, aes(x = numVotes, y = averageRating)) +
+  geom_point(alpha = 0.6, color = "lightblue") + # Cor dos pontos
+  geom_segment(aes(x = 32000, y = 9.4, xend = 32000, yend = 14.4), 
+               linetype = 3, color = "red", size = 1)+
+  geom_segment(aes(x = 770000, y = 9.4, xend = 770000, yend = 14.4), 
+               linetype = 3, color = "red", size = 1)+
+  geom_segment(aes(x = 32000, y = 9.4, xend = 770000, yend = 9.4), 
+               linetype = 3, color = "red", size = 1)+
+  geom_segment(aes(x = 32000, y = 14.4, xend = 770000, yend = 14.4), 
+               linetype = 3, color = "red", size = 1)+
+  labs(title = "Relação entre Número de Votos e Avaliação Média",
+       x = "Número de Votos",
+       y = "Avaliação Média") +
+  scale_x_log10(labels = scales::comma) + # Formatação dos rótulos do eixo X
+  theme_minimal() 
+ # theme(text = element_text(size = 12))
+
+c <- filmes %>%
+  group_by(releaseYear) %>%
+  summarise(numMovies = n()) %>%
+  ggplot(aes(x = releaseYear, y = numMovies)) +
+  geom_line(color = "lightblue") +
+  labs(title = "Número de Filmes Lançados por Ano", x = "Ano de Lançamento", y = "Número de Filmes") +
+  theme_minimal()
+
+d <- filmes %>%
+  separate_rows(genres, sep = ", ") %>%
+  group_by(genres) %>%
+  summarise(numMovies = n(), avgRating = mean(averageRating)) %>%
+  ggplot(aes(x = reorder(genres, -numMovies), y = numMovies)) +
+  geom_bar(stat = "identity", fill = "lightblue") +
+  coord_flip() +
+  labs(title = "Gêneros mais Populares", x = "Gênero", y = "Número de Filmes") +
+  theme_minimal()
+
+
+
+
+# Definindo as margens e o tamanho #da página
+#pdf("graficos_a4.pdf", width=8.27, #height=11.69) # Tamanho A4 em #polegadas
+
+# Organizando os gráficos
+plot_grid(a, d, nrow=1, ncol=2)
+plot_grid(b, c, nrow=2, ncol=1)
+
+```
+

@@ -1,0 +1,116 @@
+---
+title: "Certificados"
+output: pdf_document
+---
+
+
+**Nome:** Anderson Cornélio de Amorim  
+**Registro Acadêmico:** GRR20212994  
+
+\newpage
+
+# Sumário
+
+
+- [Pág. 3: 4Rday_2024](4rday_2024)
+- [Pág. 4: Análise exploratoria com python 2022](#analise_exploratoria_com_python_2022)
+- [Pág. 5: Dia do estatistico 2023](#dia_do_estatistico_2023)
+- [Pág. 6: Dia do estatistico 2024](#dia_do_estatistico_2024)
+- [Pág. 7: Oficina palestrante_2024](#oficina_pre_calculo_palestrante_2024)
+- [Pág. 8: Oficina ouvinte_02-04-2024](#oficina_prob_ouvinte_02-04-2024)
+- [Pág. 9: Oficina ouvinte_25-03-2024](#oficina_prob_ouvinte_25-03-2024)
+- [Pág. 10: Oficina palestrante 25-03-2024](#oficina_prob_palestrante_25-03-2024)
+- [Pág. 11: 68rbras participação 2024](#participacao_68rbras_2024)
+- [Pág. 12: 68rbras poster 2024](#poster_68rbras_2024)
+- [Pág. 13: SiBi_UFPR - Certificado de Participação](#sei_ufpr---5022487---sibi_-bolsa-sibi_ufpr---certificado-de-participação)
+- [Pág. 14: sinape participacao](#sinape_participacao)
+- [Pág. 15: Sinape poster](#sinape_poster)
+- [Pág. 16: Southstat meeting 2023](#southstat_meeting_2023)
+
+---
+\newpage
+
+## 4Rday 2024 (8h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/4Rday_2024.pdf")
+```
+
+## Análise exploratoria com python 2022 (2h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/analise_exploratoria_com_python_2022.pdf")
+```
+
+## Dia do Estatistico_2023 (4h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/dia_do_estatistico_2023.pdf")
+```
+
+## Dia do Estatistico 2024 (3h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/dia_do_estatistico_2024.pdf")
+```
+
+## Oficina Palestrante 2024 (2h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/oficina_pre_calculo_palestrante_2024.pdf")
+```
+
+## Oficina Ouvinte 02-04-2024 (1h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/oficina_prob_ouvinte_02-04-2024.pdf")
+```
+
+## Oficina Ouvinte 25-03-2024 (1h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/oficina_prob_ouvinte_25-03-2024.pdf")
+```
+
+## Oficina Palestrante 25-03-2024 (2h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/oficina_prob_palestrante_25-03-2024.pdf")
+```
+
+## 68rbras Participação 2024 (24h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/participacao_68rbras_2024.pdf")
+```
+
+## 68rbras Pôster 2024 (2h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/poster_68rbras_2024.pdf")
+```
+
+## SiBi UFPR - Certificado de Participação (240h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/SEI_UFPR - 5022487 - SIBI_ Bolsa SiBi_UFPR - Certificado de Participação.pdf")
+```
+
+## Sinape Participação (40h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/sinape_participacao.pdf")
+```
+
+## Sinape Pôster (2h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/sinape_poster.pdf")
+```
+
+## Southstat Meeting 2023 (16h)
+
+```{r, echo=FALSE}
+knitr::include_graphics("/home/and/doc/certificado/southstat_meeting_2023.pdf")
+```
+

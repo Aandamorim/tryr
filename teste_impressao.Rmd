@@ -1,0 +1,130 @@
+---
+title: "Anderson Amorim"
+author: "https://www.kaggle.com/datasets/octopusteam/imdb-top-1000-movies/data"
+date: ""
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,  fig.width = 10, fig.height = 12, fig.align = "center")
+```
+
+``` {r, include=TRUE, echo=TRUE, eval=FALSE}
+
+a <- ggplot(filmes, aes(x = averageRating)) +
+  geom_density(fill = "cyan4", alpha = .5, adjust = 1.5, color = NA) +
+  labs(x = "Avaliação Média", y = "Densidade") +
+  theme_tufte() + 
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5)) +
+  geom_vline(aes(xintercept = mean(averageRating)), color="gray", linetype="dashed", size=1)
+
+b <- ggplot(filtered_filmes, aes(x = numVotes, y = averageRating)) +
+  geom_point(aes(color = ifelse(grepl("Drama", genres), "Drama", "Outros"), 
+                 alpha = ifelse(grepl("Drama", genres), 0.3, 0.5))) +
+  labs(x = "Número de Votos",
+       y = "Avaliação Média") +
+  scale_x_log10(labels = scales::comma) +
+  scale_color_manual(values = c("Drama" = "orange", "Outros" = "cyan4")) +
+  scale_alpha_identity() +
+  theme_tufte() +
+  theme(legend.position = "none")
+
+c <- filmes %>%
+  group_by(releaseYear) %>%
+  summarise(numMovies = n()) %>%
+  ggplot(aes(x = releaseYear, y = numMovies)) +
+  geom_line(color = "cyan4", alpha = .5) +
+  labs(x = "Ano de Lançamento", y = "Número de Filmes") +
+  theme_tufte()
+
+d <- filmes %>%
+  separate_rows(genres, sep = ",") %>%
+  mutate(genres = trimws(genres)) %>%
+  group_by(genres) %>%
+  summarise(numMovies = n(), avgRating = mean(averageRating)) %>%
+  arrange(desc(numMovies)) %>%
+  slice_head(n = 10) %>%
+  ggplot(aes(x = reorder(genres, numMovies), y = numMovies, fill = genres == "Drama")) +
+  geom_bar(stat = "identity", alpha = 0.5) +
+  coord_flip() +
+  labs(x = "Gênero", y = "Número de Filmes") +
+  scale_fill_manual(values = c("FALSE" = "cyan4", "TRUE" = "orange")) +
+  theme_tufte() +
+  theme(legend.position = "none")
+```
+
+\newpage
+
+# 1000 filmes mais bem avaliados - IMDB
+```{r}
+# dados
+
+filmes <- read.csv2("data.csv", header = TRUE, sep = ",")
+
+# pacotes
+
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(tidyr)
+library(ggthemes)
+
+# criando gráficos
+
+filtered_filmes <- filmes %>%
+  filter(!is.na(averageRating) & !is.na(numVotes)) %>%
+  filter(numVotes < 3000000) 
+
+filmes$averageRating <- as.numeric(as.character(filmes$averageRating))
+filmes <- filmes %>% filter(!is.na(averageRating))
+
+a <- ggplot(filmes, aes(x = averageRating)) +
+  geom_density(fill = "cyan4", alpha = .5, adjust = 1.5, color = NA) +
+  labs(x = "Avaliação Média", y = "Densidade") +
+  theme_tufte() + 
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5)) +
+  geom_vline(aes(xintercept = mean(averageRating)), color="gray", linetype="dashed", size=1)
+
+b <- ggplot(filtered_filmes, aes(x = numVotes, y = averageRating)) +
+  geom_point(aes(color = ifelse(grepl("Drama", genres), "Drama", "Outros"), 
+                 alpha = ifelse(grepl("Drama", genres), 0.3, 0.5))) +
+  labs(x = "Número de Votos",
+       y = "Avaliação Média") +
+  scale_x_log10(labels = scales::comma) +
+  scale_color_manual(values = c("Drama" = "orange", "Outros" = "cyan4")) +
+  scale_alpha_identity() +
+  theme_tufte() +
+  theme(legend.position = "none")
+
+c <- filmes %>%
+  group_by(releaseYear) %>%
+  summarise(numMovies = n()) %>%
+  ggplot(aes(x = releaseYear, y = numMovies)) +
+  geom_line(color = "cyan4", alpha = .5) +
+  labs(x = "Ano de Lançamento", y = "Número de Filmes") +
+  theme_tufte()
+
+d <- filmes %>%
+  separate_rows(genres, sep = ",") %>%
+  mutate(genres = trimws(genres)) %>%
+  group_by(genres) %>%
+  summarise(numMovies = n(), avgRating = mean(averageRating)) %>%
+  arrange(desc(numMovies)) %>%
+  slice_head(n = 10) %>%
+  ggplot(aes(x = reorder(genres, numMovies), y = numMovies, fill = genres == "Drama")) +
+  geom_bar(stat = "identity", alpha = 0.5) +
+  coord_flip() +
+  labs(x = "Gênero", y = "Número de Filmes") +
+  scale_fill_manual(values = c("FALSE" = "cyan4", "TRUE" = "orange")) +
+  theme_tufte() +
+  theme(legend.position = "none")
+
+top_row <- plot_grid(a, d, nrow=1)
+
+bottom_row <- plot_grid(b, c, nrow=2)
+
+final_plot <- plot_grid(top_row, bottom_row, ncol=1)
+
+print(final_plot)
+
+```
