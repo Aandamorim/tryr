@@ -1,49 +1,84 @@
-#library -----------------------------------------------------------------
+# library
 
 library(igraph)
 library(dplyr)
+library(tidyr)
+library(pheatmap)
+
+
 `%ni%` <- Negate(`%in%`)
-# data --------------------------------------------------------------------
 
-
-# Carregar o dataframe
+# df
 schizophrenia_sympt <- read.csv2("/home/and/github/tryr/Precision_analytics/schizophrenia_symp.csv", header = TRUE)
 
-
+# criando o grafo
 interm = schizophrenia_sympt$Intermediate %>% unique
 gTS = schizophrenia_sympt %>%
   select(Disorder, Symptom) %>%
   filter(Symptom %ni% interm) %>%
-  graph_from_data_frame(directed = F)
+  graph_from_data_frame(directed = F) %>%  
+  simplify(remove.multiple = TRUE, remove.loops = TRUE)
 
-# Remover loops e arestas múltiplas
-gTS <- simplify(gTS, remove.multiple = TRUE, remove.loops = TRUE)
 
-# Cores dos nós
+# cores
 V(gTS)$color <- ifelse(V(gTS)$name %in% schizophrenia_sympt$Disorder, "forestgreen","darkorange")
 
 plot(gTS,
-     layout = layout_with_dh(gTS, maxiter = 100, fineiter = 100),  # Usar layout dh
-     vertex.label = V(gTS)$name,  # Adicionar rótulos
-     vertex.label.dist = 1,  # Distância dos rótulos
-     vertex.label.cex = 0.6,  # Tamanho dos rótulos
-     vertex.size = 3,  # Tamanho dos nós
-     edge.arrow.size = 1,  # Tamanho das setas
-     #main = "Schizophrenia Network",  # Título do grafo
-     vertex.label.family = "sans",  # Fonte dos rótulos
-     vertex.label.color = "black",  # Cor dos rótulos
+     layout = layout_with_dh(gTS, maxiter = 100, fineiter = 100),
+     vertex.label = V(gTS)$name,
+     vertex.label.dist = 1,
+     vertex.label.cex = 0.6,
+     vertex.size = 3,
+     edge.arrow.size = 1,
+     vertex.label.family = "sans",
+     vertex.label.color = "black",
      asp=.3)  # Aspect ratio
 
-# Extraindo os sintomas únicos
-sintomas <- unique(schizophrenia_sympt$Symptom)
-
-# Calculando as centralidades
+# centralidades
 centralidades <- data.frame(V(gTS)$name, 
                             degree = centr_degree(gTS, mode = "in", normalized = TRUE)$res, 
                             closeness = centr_clo(gTS, mode = "all", normalized = TRUE)$res, 
                             eigen = centr_eigen(gTS, directed = TRUE, normalized = TRUE)$vector, 
                             betweenness = centr_betw(gTS, directed = TRUE, normalized = TRUE)$res)
 
-colnames(centralidades)[1] <- "names" 
+# centralidade dos sintomas
+centralidades_sympt <- centralidades %>% 
+  filter(centralidades$V.gTS..name %in% unique(schizophrenia_sympt$Symptom))
 
-centralidades_sympt <- centralidades[centralidades$name %in% sintomas, ]
+# jaccard index
+
+
+transtorno_sintomas <- schizophrenia_sympt %>%
+  select(Disorder, Symptom) %>%
+  unique()
+
+# Função para calcular o índice de Jaccard entre dois conjuntos
+calcular_jaccard <- function(set1, set2) {
+  intersecao <- length(intersect(set1, set2))
+  uniao <- length(union(set1, set2))
+  return(ifelse(uniao == 0, 0, intersecao / uniao))
+}
+
+transtornos <- unique(transtorno_sintomas$Disorder)
+n <- length(transtornos)
+
+matriz_jaccard <- matrix(0, nrow = n, ncol = n)
+rownames(matriz_jaccard) <- transtornos
+colnames(matriz_jaccard) <- transtornos
+
+for (i in 1:n) {
+  for (j in 1:n) {
+    if (i != j) {
+      sintomas_i <- transtorno_sintomas$Symptom[transtorno_sintomas$Disorder == transtornos[i]]
+      sintomas_j <- transtorno_sintomas$Symptom[transtorno_sintomas$Disorder == transtornos[j]]
+      matriz_jaccard[i, j] <- calcular_jaccard(sintomas_i, sintomas_j)
+    }
+  }
+}
+
+print(matriz_jaccard[1:5, 1:5])
+
+
+pheatmap(matriz_jaccard, 
+         main = "Índice de Jaccard entre Transtornos",
+         color = colorRampPalette(c("white", "red"))(100))
