@@ -5,7 +5,6 @@ library(dplyr)
 library(tidyr)
 library(pheatmap)
 
-
 `%ni%` <- Negate(`%in%`)
 
 # df
@@ -78,7 +77,41 @@ for (i in 1:n) {
 
 print(matriz_jaccard[1:5, 1:5])
 
+pheatmap(matriz_jaccard, 
+         main = "Índice de Jaccard entre Transtornos",
+         color = colorRampPalette(c("white", "red"))(100),
+         angle_col = "45",
+         cluster_cols = F,
+         cluster_rows = F)
+
+# clareza do jaccard [wip]
+diag(matriz_jaccard) <- -2
 
 pheatmap(matriz_jaccard, 
          main = "Índice de Jaccard entre Transtornos",
-         color = colorRampPalette(c("white", "red"))(100))
+         color = c("grey",colorRampPalette(c("white", "red"))(100)),
+         breaks = c(-2, seq(-1, 1, length.out = 100)),
+         angle_col = "45",
+         cluster_cols = F,
+         cluster_rows = F,
+# legendas começa a partir de...         legend_labels = seq(-1,1),
+)
+
+# Distância entre transtornos
+
+matriz_distancia <- distances(gTS, v = transtornos, to = transtornos, mode = 'all')
+
+matriz_distancia[is.infinite(matriz_distancia)] <- -1
+
+max_dist <- max(matriz_distancia[matriz_distancia != -1])
+
+matriz_distancia[2,1] <- 8
+
+pheatmap(matriz_distancia, 
+         main = "Distância entre Transtornos",
+         color = cores <- c("grey", colorRampPalette(c("yellow", "red"))(200)),
+         breaks = breaks <- c(-1.5, -0.5, seq(0, max_dist, length.out = 100)),
+         angle_col = "45",
+         cluster_cols = F,
+         cluster_rows = F,
+         legend = F)
