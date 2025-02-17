@@ -60,6 +60,8 @@ calcular_jaccard <- function(set1, set2) {
 
 transtornos <- unique(transtorno_sintomas$Disorder)
 n <- length(transtornos)
+transtornos[grep("Catatonia Associated", transtornos)] <- "Catatonia Associated with Another Mental Disorder"
+
 
 matriz_jaccard <- matrix(0, nrow = n, ncol = n)
 rownames(matriz_jaccard) <- transtornos
@@ -87,14 +89,18 @@ pheatmap(matriz_jaccard,
 # clareza do jaccard [wip]
 diag(matriz_jaccard) <- -2
 
+matriz_jaccard[]
+
 pheatmap(matriz_jaccard, 
          main = "Índice de Jaccard entre Transtornos",
-         color = c("grey",colorRampPalette(c("white", "red"))(100)),
+         color = c("white",colorRampPalette(c("white", "blue"))(100)),
          breaks = c(-2, seq(-1, 1, length.out = 100)),
          angle_col = "45",
          cluster_cols = F,
          cluster_rows = F,
-# legendas começa a partir de...         legend_labels = seq(-1,1),
+         legend_breaks = seq(-1, 1, length.out = 3),
+         legend_labels = c("-1", "0", "1"),
+         border_color = "grey32"
 )
 
 # Distância entre transtornos
@@ -105,13 +111,20 @@ matriz_distancia[is.infinite(matriz_distancia)] <- -1
 
 max_dist <- max(matriz_distancia[matriz_distancia != -1])
 
-matriz_distancia[2,1] <- 8
+# teste da escala matriz_distancia[2,1] <- 8
+
+matriz_numeros <- matriz_distancia
+
+matriz_numeros[matriz_numeros == -1] <- ""
+
+
 
 pheatmap(matriz_distancia, 
          main = "Distância entre Transtornos",
-         color = cores <- c("grey", colorRampPalette(c("yellow", "red"))(200)),
+         color = cores <- c("grey", colorRampPalette(c("white", "blue"))(100)),
          breaks = breaks <- c(-1.5, -0.5, seq(0, max_dist, length.out = 100)),
          angle_col = "45",
          cluster_cols = F,
          cluster_rows = F,
+         display_numbers = matriz_numeros,
          legend = F)
