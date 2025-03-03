@@ -1,9 +1,48 @@
+---
+title: "Resultados parciais DiNA"
+author: "Anderson Amorim"
+date: "2025-03-02"
+output: 
+  beamer_presentation:
+    theme: "Boadilla"
+    colortheme: "beaver"
+    fonttheme: "structurebold"
+---
+
+# O início
+
+Foram umas duas semanas pra conseguir plotar o primeiro grafo, e mais umas duas pra fazer uma versão que fosse minimamente apresentável. Depois de tanto bater a cabeça na parede com coisas básicas porque eu não sabia nada de R (e achava que sabia pelo menos o básico), finalmente consegui fazer algo que me deixou satisfeito [i.e.: a professora resumiu tudo que eu tinha tentado fazer em 3 meses em 3 minutos digitando um código].
+
+# O primeiro grafo
+```{r, out.width = "90%", fig.align = "center", fig.cap="eita!", echo=FALSE}
+knitr::include_graphics("SchizoNet1.png")
+
+```
+
+# O primeiro grafo
+
+```{r, out.width = "90%", fig.align = "center", fig.cap="cores", echo=FALSE}
+knitr::include_graphics("net2.png")
+
+```
+
+# O primeiro grafo
+
+```{r, out.width = "90%", fig.align = "center", fig.cap="experiência", echo=FALSE}
+knitr::include_graphics("schizo_network3.png")
+```
+
+# Medidas de Centralidade
+
+```{r, echo= FALSE, warning=FALSE, message=FALSE}
 # library
 
 library(igraph)
 library(dplyr)
 library(tidyr)
 library(pheatmap)
+library(knitr)
+library(kableExtra)
 
 `%ni%` <- Negate(`%in%`)
 
@@ -17,33 +56,29 @@ gTS = schizophrenia_sympt %>%
   filter(Symptom %ni% interm) %>%
   graph_from_data_frame(directed = F) %>%  
   simplify(remove.multiple = TRUE, remove.loops = TRUE)
+```
 
-
-# cores
-V(gTS)$color <- ifelse(V(gTS)$name %in% schizophrenia_sympt$Disorder, "forestgreen","darkorange")
-
-plot(gTS,
-     layout = layout_with_dh(gTS, maxiter = 100, fineiter = 100),
-     vertex.label = V(gTS)$name,
-     vertex.label.dist = 1,
-     vertex.label.cex = 0.6,
-     vertex.size = 3,
-     edge.arrow.size = 1,
-     vertex.label.family = "sans",
-     vertex.label.color = "black",
-     asp=.3)  # Aspect ratio
-
-# centralidades
+```{r, echo = FALSE}
 centralidades <- data.frame(V(gTS)$name, 
                             degree = centr_degree(gTS, mode = "in", normalized = TRUE)$res, 
                             closeness = centr_clo(gTS, mode = "all", normalized = TRUE)$res, 
                             eigen = centr_eigen(gTS, directed = TRUE, normalized = TRUE)$vector, 
                             betweenness = centr_betw(gTS, directed = TRUE, normalized = TRUE)$res)
 
-# centralidade dos sintomas
 centralidades_sympt <- centralidades %>% 
   filter(centralidades$V.gTS..name %in% unique(schizophrenia_sympt$Symptom))
+```
 
+```{r, echo = FALSE, eval = TRUE}
+centralidades_sympt%>%
+head() %>%
+kable(format = "latex", booktabs = TRUE) %>%
+kable_styling(font_size = 7)
+```
+
+# Índice de Jaccard
+
+```{r, echo = FALSE}
 # jaccard index
 
 
@@ -79,44 +114,18 @@ for (i in 1:n) {
   }
 }
 
-print(matriz_jaccard[1:5, 1:5])
 
 # heatmap jaccard 
-diag(matriz_jaccard) <- -2
+diag(matriz_jaccard) <- 1
 
 ## gambiarra pra mostrar os números sem o -2 na diagonal
 matriz_num_jac <- matriz_jaccard
 matriz_num_jac <-round(matriz_num_jac, 3)
 matriz_num_jac[matriz_num_jac == -2] <- ""
 matriz_num_jac[matriz_num_jac == 0] <- ""
+```
 
-
-#####
-# 
-# teste_superior <- cor(matriz_jaccard)
-# 
-# teste_superior[lower.tri(teste_superior)] <- NA
-# 
-# mat_tes_num <- teste_superior
-# mat_tes_num <- round(mat_tes_num, 3)
-# mat_tes_num[mat_tes_num < 0] <- ""
-# mat_tes_num[is.na(mat_tes_num)] <- ""
-# 
-# pheatmap(teste_superior, 
-#          main = "Índice de Jaccard entre Transtornos",
-#          color = colorRampPalette(c("white", "blue"))(100),
-#          breaks = seq(0, 1, length.out = 100),
-#          angle_col = "45",
-#          cluster_cols = F,
-#          cluster_rows = F,
-#          legend_breaks = seq(0, 1, length.out = 3),
-#          legend_labels = c( "0","", "1"),
-#          display_numbers = mat_tes_num,
-#          border_color = "white",
-#          na_col = "white"
-# )
-#####
-
+```{r, echo = FALSE, eval = TRUE, out.width = "80%", fig.align = "center"}
 pheatmap(matriz_jaccard, 
          main = "Índice de Jaccard entre Transtornos",
          color = c("white",colorRampPalette(c("white", "red"))(100)),
@@ -130,13 +139,16 @@ pheatmap(matriz_jaccard,
          display_numbers = matriz_num_jac,
          border_color = "grey80",
          fontsize = 8,
-         fontsize_row = 8,
-         fontsize_col = 8,
+         fontsize_row = 7,
+         fontsize_col = 7,
          cellwidth = 40,
          cellheight = 40
 )
+```
 
+```{r, echo = FALSE}
 # Separation transtornos
+
 transtornos <- unique(transtorno_sintomas$Disorder)
 matriz_distancia <- distances(gTS, v = transtornos, to = transtornos, mode = 'all')
 
@@ -147,9 +159,11 @@ max_dist <- max(matriz_distancia[matriz_distancia != -1])
 matriz_numeros <- matriz_distancia
 
 matriz_numeros[matriz_numeros == -1] <- ""
+```
 
+# Distância entre Transtornos
 
-
+```{r, echo = FALSE, eval = TRUE, out.width = "80%", fig.align = "center"}
 pheatmap(matriz_distancia, 
          main = "Distância entre Transtornos",
          color = cores <- c("white", colorRampPalette(c("grey", "red"))(100)),
@@ -162,36 +176,14 @@ pheatmap(matriz_distancia,
          fontsize = 8,
          fontsize_row = 8,
          fontsize_col = 8,
-         cellwidth = 40,
-         cellheight = 40
+         cellwidth = 30,
+         cellheight = 30
          )
+```
 
-# # Similarity transtornos
-# 
-# 
-# matriz_similaridade <- similarity(gTS, method = "jaccard", 
-#                                   vids = transtornos,
-#                                   mode = "all")
-# 
-# matriz_dist_sim <- 1 - matriz_similaridade
-# 
-# max_dist_sim <- max(matriz_dist_sim)
-# rownames(matriz_dist_sim) <- transtornos
-# colnames(matriz_dist_sim) <- transtornos
-# 
-# pheatmap(matriz_dist_sim, 
-#          main = "Similaridade entre Transtornos",
-#          color = colorRampPalette(c("white", "red"))(100),
-#          breaks = seq(0, max_dist_sim, length.out = 100),
-#          angle_col = "45",
-#          cluster_cols = F,
-#          cluster_rows = F,
-#          display_numbers = T,
-#          legend = T)
+# Similiridade entre Transtornos
+```{r, echo = FALSE}
 
-## teste similaridade
-
-# Função para calcular a proximidade entre dois transtornos
 calcular_proximidade <- function(transtorno1, transtorno2, grafo) {
   sintomas1 <- neighbors(grafo, transtorno1)
   sintomas2 <- neighbors(grafo, transtorno2)
@@ -203,21 +195,44 @@ calcular_proximidade <- function(transtorno1, transtorno2, grafo) {
 }
 
 # Criar matriz de proximidade
+n <- length(transtornos)
 matriz_proximidade <- matrix(0, nrow = n, ncol = n)
+rownames(matriz_jaccard) <- transtornos
+colnames(matriz_jaccard) <- transtornos
 
 for (i in 1:n) {
   for (j in 1:n) {
     matriz_proximidade[i, j] <- calcular_proximidade(transtornos[i], transtornos[j], gTS)
   }
 }
+```
 
-# Plotar o heatmap
+```{r, echo = FALSE, eval = TRUE, out.width = "80%", fig.align = "center"}
+
 pheatmap(matriz_proximidade, 
-         main = "Proximidade entre Transtornos (Baseada em Sintomas Compartilhados)",
+         main = "Proximidade entre Transtornos (Sintomas Compartilhados)",
          color = colorRampPalette(c("white", "red"))(100),
          breaks = seq(0, 1, length.out = 100),
          angle_col = "45",
          cluster_cols = F,
          cluster_rows = F,
          display_numbers = T,
-         legend = T)
+         legend = F,
+         labels_row = transtornos,
+         labels_col = transtornos,
+         fontsize = 8,
+         fontsize_row = 8,
+         fontsize_col = 8,
+         cellwidth = 30,
+         cellheight = 30)
+```
+
+
+# Próximos passos
+
+Os dados dos pacientes já estão disponíveis, e eu já estou lidando com eles (com 99% de ajuda da professora) e em breve os dois processos serão unificados. Ainda não sei como vou fazer isso, mas a ideia é usar os dados de sintomas e dos diagnósticos para tentar entender melhor a relação entre os transtornos.
+E, finalmente, aplicar todos os resultados acima com todos os transtornos da base completa.
+
+# Obrigado
+
+\centering acredite nos seus sonhos!
