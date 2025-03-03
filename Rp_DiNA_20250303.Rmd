@@ -6,29 +6,30 @@ output:
   beamer_presentation:
     theme: "Boadilla"
     colortheme: "beaver"
-    fonttheme: "structurebold"
+    #fonttheme: "structurebold"
+    fonttheme: "professionalfonts"
 ---
 
 # O início
 
 Foram umas duas semanas pra conseguir plotar o primeiro grafo, e mais umas duas pra fazer uma versão que fosse minimamente apresentável. Depois de tanto bater a cabeça na parede com coisas básicas porque eu não sabia nada de R (e achava que sabia pelo menos o básico), finalmente consegui fazer algo que me deixou satisfeito [i.e.: a professora resumiu tudo que eu tinha tentado fazer em 3 meses em 3 minutos digitando um código].
 
-# O primeiro grafo
-```{r, out.width = "90%", fig.align = "center", fig.cap="eita!", echo=FALSE}
+# O primeiro grafo a gente não esquece
+```{r, out.width = "90%", fig.align = "center", fig.cap="eita! Deu certo?", echo=FALSE}
 knitr::include_graphics("SchizoNet1.png")
 
 ```
 
-# O primeiro grafo
+# Cores
 
-```{r, out.width = "90%", fig.align = "center", fig.cap="cores", echo=FALSE}
+```{r, out.width = "90%", fig.align = "center", echo=FALSE}
 knitr::include_graphics("net2.png")
 
 ```
 
-# O primeiro grafo
+# Experiência
 
-```{r, out.width = "90%", fig.align = "center", fig.cap="experiência", echo=FALSE}
+```{r, out.width = "90%", fig.align = "center", echo=FALSE}
 knitr::include_graphics("schizo_network3.png")
 ```
 
@@ -166,8 +167,8 @@ matriz_numeros[matriz_numeros == -1] <- ""
 ```{r, echo = FALSE, eval = TRUE, out.width = "80%", fig.align = "center"}
 pheatmap(matriz_distancia, 
          main = "Distância entre Transtornos",
-         color = cores <- c("white", colorRampPalette(c("grey", "red"))(100)),
-         breaks = breaks <- c(-1.5, -0.5, seq(0, max_dist, length.out = 50)),
+         color = cores <- c("white", colorRampPalette(c("white", "red"))(100)),
+         breaks = breaks <- c(-1.5, -0.5, seq(0, max_dist, length.out = 100)),
          angle_col = "45",
          cluster_cols = F,
          cluster_rows = F,
@@ -181,7 +182,7 @@ pheatmap(matriz_distancia,
          )
 ```
 
-# Similiridade entre Transtornos
+# Similaridade entre Transtornos
 ```{r, echo = FALSE}
 
 calcular_proximidade <- function(transtorno1, transtorno2, grafo) {
@@ -231,7 +232,7 @@ pheatmap(matriz_proximidade,
 # Próximos passos
 
 Os dados dos pacientes já estão disponíveis, e eu já estou lidando com eles (com 99% de ajuda da professora) e em breve os dois processos serão unificados. Ainda não sei como vou fazer isso, mas a ideia é usar os dados de sintomas e dos diagnósticos para tentar entender melhor a relação entre os transtornos.
-E, finalmente, aplicar todos os resultados acima com todos os transtornos da base completa.
+E, finalmente, aplicar todos os resultados acima para a base completa.
 
 # Obrigado
 
