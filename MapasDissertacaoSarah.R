@@ -150,9 +150,9 @@ ggplot(teste_bairroscentro) +
   geom_text_repel(aes(x = X, y = Y, label = NOME), 
                   size = 2,
                   #fontface = "bold",
-                  segment.color = "black",     # Cor da linha/seta que liga o nome ao bairro
-                  segment.size = 0.3,           # Espessura da linha
-                  box.padding = 0.2,            # Espaço livre ao redor de cada texto
+                  segment.color = "black",     
+                  segment.size = 0.3,           
+                  box.padding = 0.2,          
                   point.padding = 0.05,
                   max.overlaps = Inf,
                   force = 2) +
@@ -164,9 +164,9 @@ ggplot(teste_bairroscentro) +
 # padronização da coluna NOME em ambos dfs
 
 teste_bairroscentro <- teste_bairroscentro |> 
-  mutate(NOME = str_trim(NOME),              # Remove espaços no início e fim
-         NOME = str_to_upper(NOME),           # Transforma tudo em MAIÚSCULO
-         NOME = iconv(NOME, to = "ASCII//TRANSLIT")) # Remove acentos (é = E, ç = C)
+  mutate(NOME = str_trim(NOME),              
+         NOME = str_to_upper(NOME),          
+         NOME = iconv(NOME, to = "ASCII//TRANSLIT"))
 
 contagem_privadas <- contagem_privadas |> 
   mutate(NOME = str_trim(NOME),
